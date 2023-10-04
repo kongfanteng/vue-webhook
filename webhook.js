@@ -24,6 +24,7 @@ const server = http.createServer(function (req, res) {
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
+        console.log('payload:', payload)
         const child = spawn('sh', [`./${payload.repository.name}.sh`])
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
