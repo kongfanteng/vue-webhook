@@ -17,12 +17,9 @@ const server = http.createServer(function (req, res) {
       const body = Buffer.concat(buffers)
       const event = req.headers['x-github-event'] //evet = push
       const signature = req.headers['x-hub-signature']
-      console.log('signature:', signature)
-      console.log('sign(body):', sign(body))
-      // if (signature === sign(body)) {
-      //   return res.end('Not Allowed')
-      // }
-      
+      if (signature !== sign(body)) {
+        return res.end('Not Allowed')
+      }
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
@@ -30,9 +27,15 @@ const server = http.createServer(function (req, res) {
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
         })
-        child.stdout.on('end', function (buffer) {
-          const log = Buffer.concat(buffers).toString()
-          console.log('log:', log)
+        child.stdout.on('end', function () {
+          const logs = Buffer.concat(buffers).toString();
+          sendMail(`
+            <h1>部署日期: ${new Date()}</h1>
+            <h1>部署人: ${payload.pusher.name}</h1>
+            <h1>部署邮箱: ${payload.pusher.email}</h1>
+            <h1>提交信息: ${payload.head_commit&&payload.head_commit}</h1>
+            <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
+          `)
         })
       }
     })
