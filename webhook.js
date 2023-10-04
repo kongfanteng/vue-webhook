@@ -1,3 +1,6 @@
+const crypto = require('crypto')
+const SECRET = '123456'
+const sign = (body) => `sha1=${ crypto.createHmac('sha1', SECRET).update(body).digest('hex') }`;
 const http = require('http')
 const server = http.createServer(function (req, res) {
   if (req.method === 'POST' && req.url == '/webhook') {
@@ -7,12 +10,11 @@ const server = http.createServer(function (req, res) {
     })
     req.on('end', function () {
       const body = Buffer.concat(buffers)
-      console.log('req.headers:', req.headers)
       const event = req.headers['x-github-event'] //evet = push
-      const signature = req.headers['x-hub-signature']
-      console.log('event:', event)
-      console.log('signature:', signature)
-      console.log('body:', body)
+      const signature = req.headers['x-hub-signature']     
+      if (signature !== sign(body)){
+        return res.end('Not Allowed')
+      }
     })
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify({ ok: true }))
