@@ -31,13 +31,13 @@ const server = http.createServer(function (req, res) {
         child.stdout.on('end', function () {
           const logs = Buffer.concat(buffers).toString();
           console.log('payload.head_commit:', payload.head_commit)
-          // sendMail(`
-          //   <h1>部署日期: ${new Date()}</h1>
-          //   <h1>部署人: ${payload.pusher.name}</h1>
-          //   <h1>部署邮箱: ${payload.pusher.email}</h1>
-          //   <h1>提交信息: ${payload.head_commit&&payload.head_commit}</h1>
-          //   <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
-          // `)
+          sendMail(`
+            <h1>部署日期: ${new Date()}</h1>
+            <h1>部署人: ${payload.pusher.name}</h1>
+            <h1>部署邮箱: ${payload.pusher.email}</h1>
+            <h1>提交信息: ${payload.head_commit && payload.head_commit.id}</h1>
+            <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
+          `)
         })
       } 
       res.setHeader('Content-Type', 'application/json')
