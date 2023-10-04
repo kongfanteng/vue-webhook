@@ -4,6 +4,8 @@ const sign = (body) =>
   `sha1=${crypto.createHmac('sha1', SECRET).update(body).digest('hex')}`
 
 const http = require('http')
+let sendMail = require('./sendMail')
+console.log('sendMail:', sendMail)
 
 const { spawn } = require('child_process')
 
