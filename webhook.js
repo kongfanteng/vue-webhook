@@ -17,12 +17,14 @@ const server = http.createServer(function (req, res) {
       const body = Buffer.concat(buffers)
       const event = req.headers['x-github-event'] //evet = push
       const signature = req.headers['x-hub-signature']
-      if (signature !== sign(body)) {
-        return res.end('Not Allowed')
-      }
+      console.log('signature !== sign(body):', signature !== sign(body))
+      // if (signature !== sign(body)) {
+      //   return res.end('Not Allowed')
+      // }
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
+        console.log('`./${payload.repository.name}.sh`:', `./${payload.repository.name}.sh`)
         const child = spawn('sh', [`./${payload.repository.name}.sh`])
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
