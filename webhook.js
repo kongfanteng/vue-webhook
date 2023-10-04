@@ -38,11 +38,14 @@ const server = http.createServer(function (req, res) {
           //   <h1>提交信息: ${payload.head_commit&&payload.head_commit}</h1>
           //   <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
           // `)
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ ok: true }))
         })
+      } else {
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({ ok: true }))
       }
     })
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ ok: true }))
   } else {
     res.end('Not Found')
   }
