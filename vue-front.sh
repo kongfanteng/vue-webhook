@@ -6,6 +6,7 @@ git reset --hard origin/master
 git clean -f
 echo "拉取最新代码"
 git pull origin master
+npm run build
 echo "开始执行构建"
 docker build -t vue-front:1.0 .
 echo "停止旧容器并删除旧容器"
