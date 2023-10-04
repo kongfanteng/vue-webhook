@@ -18,9 +18,9 @@ const server = http.createServer(function (req, res) {
       const event = req.headers['x-github-event'] //evet = push
       const signature = req.headers['x-hub-signature']
       console.log('signature:', signature)
-      // if (signature === sign(body)) {
-      //   return res.end('Not Allowed')
-      // }
+      if (signature === sign(body)) {
+        return res.end('Not Allowed')
+      }
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
