@@ -7,12 +7,11 @@ const server = http.createServer(function (req, res) {
     })
     req.on('end', function () {
       const body = Buffer.concat(buffers)
-      console.log('req.header:', req.header)
-      // const event = req.header['x-github-event'] //evet = push
-      // const signature = req.headers['x-hub-signature']
-      // console.log('event:', event)
-      // console.log('signature:', signature)
-      // console.log('body:', body)
+      const event = req.headers['x-github-event'] //evet = push
+      const signature = req.headers['x-hub-signature']
+      console.log('event:', event)
+      console.log('signature:', signature)
+      console.log('body:', body)
     })
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify({ ok: true }))
