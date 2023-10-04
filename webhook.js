@@ -22,6 +22,7 @@ const server = http.createServer(function (req, res) {
       // if (signature === sign(body)) {
       //   return res.end('Not Allowed')
       // }
+      
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
