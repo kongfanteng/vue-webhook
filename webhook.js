@@ -7,6 +7,7 @@ const server = http.createServer(function (req, res) {
     })
     req.on('end', function () {
       const body = Buffer.concat(buffers)
+      console.log('req.header:', req.header)
       const event = req.header['x-github-event'] //evet = push
       const signature = req.headers['x-hub-signature']
       console.log('event:', event)
