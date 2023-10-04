@@ -2,10 +2,8 @@ const crypto = require('crypto')
 const SECRET = '123456'
 const sign = (body) =>
   `sha1=${crypto.createHmac('sha1', SECRET).update(body).digest('hex')}`
-
 const http = require('http')
 let sendMail = require('./sendMail')
-
 const { spawn } = require('child_process')
 
 const server = http.createServer(function (req, res) {
@@ -20,24 +18,25 @@ const server = http.createServer(function (req, res) {
       const signature = req.headers['x-hub-signature']
       console.log('sign(body):', sign(body))
       console.log('signature:', signature)
-      // if (signature !== sign(body)) {
-      //   return res.end('Not Allowed')
-      // }
+      if (signature !== sign(body)) {
+        return res.end('Not Allowed')
+      }
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
+        const child = spawn('sh', [`./${payload.repository.name}.sh`]);
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
         })
         child.stdout.on('end', function () {
           const logs = Buffer.concat(buffers).toString();
-          // sendMail(`
-          //   <h1>部署日期: ${new Date()}</h1>
-          //   <h1>部署人: ${payload.pusher.name}</h1>
-          //   <h1>部署邮箱: ${payload.pusher.email}</h1>
-          //   <h1>提交信息: ${payload.head_commit&&payload.head_commit}</h1>
-          //   <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
-          // `)
+          sendMail(`
+            <h1>部署日期: ${new Date()}</h1>
+            <h1>部署人: ${payload.pusher.name}</h1>
+            <h1>部署邮箱: ${payload.pusher.email}</h1>
+            <h1>提交信息: ${payload.head_commit&&payload.head_commit}</h1>
+            <h1>部署日志: ${logs.replace("\r\n", "<br/>")}</h1>
+          `)
           res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify({ ok: true }))
         })
