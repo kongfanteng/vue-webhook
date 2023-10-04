@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransporter({
     pass: 'nlhmtanupfwnbagb',
   }
 })
-fucntion sendMail(message) {
+function sendMail(message) {
   const mailOptions = {
     from: '"1228318390" <1228318390@qq.com>', // 发送地址
     to: '1228318390@qq.com', // 接收者
