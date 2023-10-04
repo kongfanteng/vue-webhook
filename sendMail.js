@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: 'qq',
   port: 465,
   secureConnection: true,

@@ -5,7 +5,6 @@ const sign = (body) =>
 
 const http = require('http')
 let sendMail = require('./sendMail')
-console.log('sendMail:', sendMail)
 
 const { spawn } = require('child_process')
 
@@ -27,14 +26,11 @@ const server = http.createServer(function (req, res) {
       if (event === 'push') {
         // 开始部署
         const payload = JSON.parse(body)
-        console.log('`./${payload.repository.name}.sh`:', `./${payload.repository.name}.sh`)
-        const child = spawn('sh', [`./${payload.repository.name}.sh`])
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
         })
         child.stdout.on('end', function () {
           const logs = Buffer.concat(buffers).toString();
-          console.log('logs:', logs)
           // sendMail(`
           //   <h1>部署日期: ${new Date()}</h1>
           //   <h1>部署人: ${payload.pusher.name}</h1>
