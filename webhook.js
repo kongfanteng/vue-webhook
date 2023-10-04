@@ -1,6 +1,5 @@
 const http = require('http')
 const server = http.createServer(function (req, res) {
-  console.log('req.url:', req.url)
   if (req.method === 'POST' && req.url == '/webhook') {
     const buffers = []
     req.on('data', function (buffer) {
