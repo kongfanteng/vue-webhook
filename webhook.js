@@ -6,6 +6,7 @@ const sign = (body) =>
 const http = require('http')
 
 const { spawn } = require('child_process')
+let sendMail = require('./sendMail')
 
 const server = http.createServer(function (req, res) {
   if (req.method === 'POST' && req.url == '/webhook') {
@@ -17,7 +18,8 @@ const server = http.createServer(function (req, res) {
       const body = Buffer.concat(buffers)
       const event = req.headers['x-github-event'] //evet = push
       const signature = req.headers['x-hub-signature']
-      console.log('signature !== sign(body):', signature !== sign(body))
+      console.log('signature:', signature)
+      console.log('sign(body):', sign(body))
       // if (signature !== sign(body)) {
       //   return res.end('Not Allowed')
       // }
